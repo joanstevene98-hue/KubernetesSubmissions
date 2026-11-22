@@ -16,6 +16,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.7/log_output)
 - [1.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.8/todo_app)
 - [1.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.9/ping_pong)
+- [1.10.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.10/log_output)
 
 ## Running
 
@@ -88,4 +89,15 @@ The ping-pong app shares the ingress of log output (`log_output/manifests/ingres
 ```
 kubectl apply -f ping_pong/manifests -f log_output/manifests
 # open http://localhost:8081/pingpong
+```
+
+### 1.10
+
+Log output is split into `log_output/writer` and `log_output/reader`, two containers
+in the same pod sharing an `emptyDir` volume.
+
+```
+kubectl apply -f log_output/manifests
+kubectl logs deployment/log-output-dep -c log-writer
+# open http://localhost:8081/status
 ```
