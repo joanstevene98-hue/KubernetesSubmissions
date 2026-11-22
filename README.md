@@ -31,6 +31,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_app) (also [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_backend))
 - [2.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.7/ping_pong)
 - [2.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.8/todo_backend)
+- [2.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.9/todo_cronjob)
 
 ## Running
 
@@ -223,4 +224,13 @@ the ConfigMap and the credentials from a SOPS encrypted Secret.
 ```
 sops --decrypt todo_backend/secrets/secret.enc.yaml | kubectl apply -f -
 kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
+```
+
+### 2.9
+
+A CronJob creates every hour a todo `Read <random Wikipedia article>`.
+
+```
+kubectl apply -f todo_cronjob/manifests
+kubectl create job -n project --from=cronjob/wikipedia-todo wikipedia-todo-now   # run it right away
 ```
