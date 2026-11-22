@@ -21,6 +21,10 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.12.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.12/todo_app)
 - [1.13.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.13/todo_app)
 
+### Chapter 3
+
+- [2.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/ping_pong))
+
 ## Running
 
 ```
@@ -131,4 +135,13 @@ kubectl apply -f volumes -f todo_app/manifests
 ```
 kubectl apply -f todo_app/manifests
 # open http://localhost:8081
+```
+
+### 2.1
+
+Log output asks ping-pong for the count over HTTP (`GET /pings`), no shared volume anymore.
+
+```
+kubectl apply -f ping_pong/manifests -f log_output/manifests
+# open http://localhost:8081/pingpong a few times, then http://localhost:8081/status
 ```
