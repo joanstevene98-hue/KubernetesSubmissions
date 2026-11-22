@@ -3,6 +3,11 @@ const { Pool } = require('pg')
 
 const PORT = process.env.PORT
 if (!PORT) throw new Error('Missing environment variable PORT')
+const MAX_TODO_LENGTH = 140
+
+const log = (message, fields = {}) => {
+  console.log(JSON.stringify({ time: new Date().toISOString(), message, ...fields }))
+}
 
 // Connection settings come from PGHOST, PGUSER, PGPASSWORD, PGDATABASE env variables
 const pool = new Pool()
@@ -29,6 +34,7 @@ const sendJson = (res, status, body) => {
 }
 
 const server = http.createServer(async (req, res) => {
+  log('request', { method: req.method, url: req.url })
   try {
     if (req.method === 'GET' && req.url === '/todos') {
       const { rows } = await pool.query('SELECT id, text, done FROM todos ORDER BY id')
@@ -39,15 +45,22 @@ const server = http.createServer(async (req, res) => {
       try {
         text = JSON.parse(await readBody(req)).text
       } catch {
+        log('todo rejected', { reason: 'invalid JSON' })
         return sendJson(res, 400, { error: 'invalid JSON' })
       }
       if (typeof text !== 'string' || !text.trim()) {
+        log('todo rejected', { reason: 'text is required' })
         return sendJson(res, 400, { error: 'text is required' })
+      }
+      if (text.trim().length > MAX_TODO_LENGTH) {
+        log('todo rejected', { reason: 'too long', length: text.trim().length, todo: text })
+        return sendJson(res, 400, { error: `todo can be at most ${MAX_TODO_LENGTH} characters` })
       }
       const { rows } = await pool.query(
         'INSERT INTO todos (text) VALUES ($1) RETURNING id, text, done',
         [text.trim()],
       )
+      log('todo created', { todo: rows[0].text })
       return sendJson(res, 201, rows[0])
     }
     sendJson(res, 404, { error: 'not found' })

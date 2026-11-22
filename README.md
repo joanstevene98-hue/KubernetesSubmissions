@@ -32,6 +32,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.7/ping_pong)
 - [2.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.8/todo_backend)
 - [2.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.9/todo_cronjob)
+- [2.10.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.10/todo_backend) (also [monitoring](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.10/monitoring))
 
 ## Running
 
@@ -233,4 +234,19 @@ A CronJob creates every hour a todo `Read <random Wikipedia article>`.
 ```
 kubectl apply -f todo_cronjob/manifests
 kubectl create job -n project --from=cronjob/wikipedia-todo wikipedia-todo-now   # run it right away
+```
+
+### 2.10
+
+The backend logs every request as JSON and rejects todos longer than 140 characters.
+Logs are collected with Loki/Alloy and viewed in Grafana (`monitoring/`).
+
+```
+sh monitoring/install.sh
+kubectl apply -f todo_backend/manifests
+kubectl port-forward -n project svc/todo-backend-svc 3001:2345 &
+curl -X POST -H 'Content-Type: application/json' \
+  -d "{\"text\":\"$(printf 'x%.0s' $(seq 141))\"}" localhost:3001/todos   # -> 400
+kubectl port-forward -n monitoring svc/grafana 3000:80
+# Grafana -> Explore -> Loki: {namespace="project"} |= "todo rejected"
 ```
