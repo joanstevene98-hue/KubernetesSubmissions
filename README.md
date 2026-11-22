@@ -29,6 +29,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/namespaces) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_app) and [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_backend))
 - [2.5.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.5/log_output)
 - [2.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_app) (also [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_backend))
+- [2.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.7/ping_pong)
 
 ## Running
 
@@ -198,4 +199,17 @@ The project apps have no hard coded configuration, everything comes from the Con
 
 ```
 kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
+```
+
+### 2.7
+
+Ping-pong stores the counter in Postgres running as a StatefulSet. The database
+credentials are a Secret encrypted with [SOPS](https://github.com/getsops/sops) and age
+(`ping_pong/secrets/secret.enc.yaml`, see `.sops.yaml`).
+
+```
+export SOPS_AGE_KEY_FILE=<path to key.txt>
+sops --decrypt ping_pong/secrets/secret.enc.yaml | kubectl apply -f -
+kubectl apply -f ping_pong/manifests
+# open http://localhost:8081/pingpong
 ```

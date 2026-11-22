@@ -15,7 +15,21 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: ghcr.io/joanstevene98-hue/ping-pong:2.1
+          image: ghcr.io/joanstevene98-hue/ping-pong:2.7
           env:
             - name: PORT
               value: "3000"
+            - name: PGHOST
+              value: ping-pong-db-svc
+            - name: PGDATABASE
+              value: pingpong
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: ping-pong-db-secret
+                  key: POSTGRES_USER
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ping-pong-db-secret
+                  key: POSTGRES_PASSWORD
