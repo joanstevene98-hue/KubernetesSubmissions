@@ -5,6 +5,7 @@ const path = require('path')
 const PORT = process.env.PORT || 3000
 const IMAGE_DIR = process.env.IMAGE_DIR || path.join(__dirname, 'files')
 const IMAGE_URL = process.env.IMAGE_URL || 'https://picsum.photos/1200'
+const TODO_BACKEND_URL = process.env.TODO_BACKEND_URL || 'http://todo-backend-svc:2345'
 const IMAGE_TTL_MS = 10 * 60 * 1000
 
 const imagePath = path.join(IMAGE_DIR, 'image.jpg')
@@ -43,14 +44,33 @@ const ensureImage = async () => {
   return fetchImage()
 }
 
-const todos = ['Learn JavaScript', 'Learn React', 'Build a project']
+const fetchTodos = async () => {
+  const response = await fetch(`${TODO_BACKEND_URL}/todos`)
+  if (!response.ok) throw new Error(`Todo backend responded ${response.status}`)
+  return response.json()
+}
+
+const createTodo = async (text) => {
+  await fetch(`${TODO_BACKEND_URL}/todos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+}
+
+const readBody = (req) => new Promise((resolve, reject) => {
+  let data = ''
+  req.on('data', (chunk) => { data += chunk })
+  req.on('end', () => resolve(data))
+  req.on('error', reject)
+})
 
 const escapeHtml = (text) => text
   .replace(/&/g, '&amp;')
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;')
 
-const page = () => `<!DOCTYPE html>
+const page = (todos) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -59,23 +79,14 @@ const page = () => `<!DOCTYPE html>
   <body>
     <h1>The project App</h1>
     <img src="/image" alt="Random image" style="max-width: 400px">
-    <form id="todo-form">
-      <input id="todo-input" name="todo" maxlength="140" required>
+    <form method="POST" action="/todos">
+      <input name="todo" maxlength="140" required>
       <button type="submit">Create todo</button>
-      <span id="todo-error" style="color: red"></span>
     </form>
     <ul>
       ${todos.map((todo) => `<li>${escapeHtml(todo)}</li>`).join('\n      ')}
     </ul>
     <p>DevOps with Kubernetes 2026</p>
-    <script>
-      document.getElementById('todo-form').addEventListener('submit', (event) => {
-        event.preventDefault()
-        const value = document.getElementById('todo-input').value
-        document.getElementById('todo-error').textContent =
-          value.length > 140 ? 'Todo can be at most 140 characters' : ''
-      })
-    </script>
   </body>
 </html>`
 
@@ -83,8 +94,15 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'GET' && req.url === '/') {
       await ensureImage()
+      const todos = await fetchTodos()
       res.writeHead(200, { 'Content-Type': 'text/html' })
-      return res.end(page())
+      return res.end(page(todos))
+    }
+    if (req.method === 'POST' && req.url === '/todos') {
+      const text = new URLSearchParams(await readBody(req)).get('todo')
+      if (text) await createTodo(text)
+      res.writeHead(302, { Location: '/' })
+      return res.end()
     }
     if (req.method === 'GET' && req.url === '/image') {
       if (!fs.existsSync(imagePath)) await fetchImage()

@@ -24,6 +24,7 @@ Images are built by GitHub Actions on every tag and pushed to
 ### Chapter 3
 
 - [2.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/ping_pong))
+- [2.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_backend) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_app))
 
 ## Running
 
@@ -144,4 +145,14 @@ Log output asks ping-pong for the count over HTTP (`GET /pings`), no shared volu
 ```
 kubectl apply -f ping_pong/manifests -f log_output/manifests
 # open http://localhost:8081/pingpong a few times, then http://localhost:8081/status
+```
+
+### 2.2
+
+`todo_backend` keeps the todos (`GET /todos`, `POST /todos`). The todo app renders them
+server side and forwards the form to the backend.
+
+```
+kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
+# open http://localhost:8081
 ```
