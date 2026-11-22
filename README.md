@@ -39,6 +39,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [3.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.1/ping_pong)
 - [3.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.2/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.2/ping_pong))
 - [3.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.3/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.3/ping_pong))
+- [3.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.4/ping_pong)
 
 ## Running
 
@@ -298,4 +299,15 @@ gcloud container clusters update dwk-cluster --location=europe-north1-b --gatewa
 kubectl delete ingress -n exercises log-output-ingress
 kubectl apply -f ping_pong/manifests -f log_output/manifests
 kubectl get gateway -n exercises   # wait for ADDRESS
+```
+
+### 3.4
+
+The ping-pong HTTPRoute rewrites `/pingpong` to `/`, so the app itself serves the pongs in
+`/`. The GKE health check is pointed to `/healthz` with a HealthCheckPolicy so it does not
+increase the counter.
+
+```
+kubectl apply -f ping_pong/manifests
+# open http://<ADDRESS>/pingpong
 ```

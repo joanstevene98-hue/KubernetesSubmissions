@@ -1,0 +1,17 @@
+# GKE health checks / by default, which would increase the counter
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  namespace: exercises
+  name: ping-pong-healthcheck
+spec:
+  default:
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 3000
+        requestPath: /healthz
+  targetRef:
+    group: ""
+    kind: Service
+    name: ping-pong-svc
