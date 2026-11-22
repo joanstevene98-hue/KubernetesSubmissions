@@ -39,7 +39,7 @@ spec:
             - name: LOG_FILE
               value: /usr/src/app/files/log.txt
             - name: PINGPONG_URL
-              value: http://ping-pong-svc:2345/pings
+              value: http://ping-pong-svc/pings
             - name: INFO_FILE
               value: /usr/src/app/config/information.txt
             - name: MESSAGE

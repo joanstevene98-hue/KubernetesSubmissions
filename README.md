@@ -34,6 +34,10 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.9/todo_cronjob)
 - [2.10.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.10/todo_backend) (also [monitoring](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.10/monitoring))
 
+### Chapter 4
+
+- [3.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.1/ping_pong)
+
 ## Running
 
 ```
@@ -249,4 +253,24 @@ curl -X POST -H 'Content-Type: application/json' \
   -d "{\"text\":\"$(printf 'x%.0s' $(seq 141))\"}" localhost:3001/todos   # -> 400
 kubectl port-forward -n monitoring svc/grafana 3000:80
 # Grafana -> Explore -> Loki: {namespace="project"} |= "todo rejected"
+```
+
+### GKE cluster (chapter 4 onwards)
+
+```
+gcloud container clusters create dwk-cluster --zone=europe-north1-b --cluster-version=1.36 \
+  --disk-size=32 --num-nodes=3 --machine-type=e2-small
+gcloud container clusters get-credentials dwk-cluster --zone=europe-north1-b
+```
+
+### 3.1
+
+Ping-pong (with its Postgres) in GKE, exposed with a LoadBalancer service.
+
+```
+kubectl apply -f namespaces/exercises.yaml
+sops --decrypt ping_pong/secrets/secret.enc.yaml | kubectl apply -f -
+kubectl apply -f ping_pong/manifests
+kubectl get svc -n exercises ping-pong-svc   # wait for EXTERNAL-IP
+# open http://<EXTERNAL-IP>/pingpong
 ```

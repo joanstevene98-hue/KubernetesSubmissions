@@ -4,7 +4,7 @@ const path = require('path')
 
 const PORT = process.env.PORT || 3000
 const FILE_PATH = process.env.LOG_FILE || path.join(__dirname, 'files', 'log.txt')
-const PINGPONG_URL = process.env.PINGPONG_URL || 'http://ping-pong-svc:2345/pings'
+const PINGPONG_URL = process.env.PINGPONG_URL || 'http://ping-pong-svc/pings'
 const INFO_FILE = process.env.INFO_FILE || path.join(__dirname, 'config', 'information.txt')
 const MESSAGE = process.env.MESSAGE
 
