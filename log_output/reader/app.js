@@ -41,7 +41,7 @@ const status = async () => {
 }
 
 const server = http.createServer(async (req, res) => {
-  if (req.method === 'GET' && req.url === '/status') {
+  if (req.method === 'GET' && (req.url === '/' || req.url === '/status')) {
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     return res.end(await status())
   }

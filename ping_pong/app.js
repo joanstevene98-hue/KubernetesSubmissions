@@ -31,6 +31,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/plain' })
       return res.end(`pong ${await increment()}`)
     }
+    // GKE load balancer health check
+    if (req.method === 'GET' && req.url === '/') {
+      res.writeHead(200, { 'Content-Type': 'text/plain' })
+      return res.end('ok')
+    }
     if (req.method === 'GET' && req.url === '/pings') {
       res.writeHead(200, { 'Content-Type': 'application/json' })
       return res.end(JSON.stringify({ pings: await current() }))

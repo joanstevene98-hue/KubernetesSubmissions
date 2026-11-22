@@ -37,6 +37,7 @@ Images are built by GitHub Actions on every tag and pushed to
 ### Chapter 4
 
 - [3.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.1/ping_pong)
+- [3.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.2/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/3.2/ping_pong))
 
 ## Running
 
@@ -273,4 +274,15 @@ sops --decrypt ping_pong/secrets/secret.enc.yaml | kubectl apply -f -
 kubectl apply -f ping_pong/manifests
 kubectl get svc -n exercises ping-pong-svc   # wait for EXTERNAL-IP
 # open http://<EXTERNAL-IP>/pingpong
+```
+
+### 3.2
+
+Log output and ping-pong in GKE behind an Ingress: `/` goes to log output and `/pingpong`
+to ping-pong. Both apps answer 200 in `/` for the GKE health check.
+
+```
+kubectl apply -f ping_pong/manifests -f log_output/manifests
+kubectl get ingress -n exercises   # wait for ADDRESS
+# open http://<ADDRESS>/ and http://<ADDRESS>/pingpong
 ```
