@@ -13,24 +13,27 @@ spec:
         app: log-output
     spec:
       volumes:
-        - name: shared-log
-          emptyDir: {}
+        - name: shared-files
+          persistentVolumeClaim:
+            claimName: shared-claim
       containers:
         - name: log-writer
-          image: ghcr.io/joanstevene98-hue/log-output-writer:1.10
+          image: ghcr.io/joanstevene98-hue/log-output-writer:1.11
           env:
             - name: LOG_FILE
               value: /usr/src/app/files/log.txt
           volumeMounts:
-            - name: shared-log
+            - name: shared-files
               mountPath: /usr/src/app/files
         - name: log-reader
-          image: ghcr.io/joanstevene98-hue/log-output-reader:1.10
+          image: ghcr.io/joanstevene98-hue/log-output-reader:1.11
           env:
             - name: PORT
               value: "3000"
             - name: LOG_FILE
               value: /usr/src/app/files/log.txt
+            - name: COUNTER_FILE
+              value: /usr/src/app/files/pingpong.txt
           volumeMounts:
-            - name: shared-log
+            - name: shared-files
               mountPath: /usr/src/app/files

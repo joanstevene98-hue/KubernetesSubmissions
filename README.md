@@ -17,6 +17,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.8/todo_app)
 - [1.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.9/ping_pong)
 - [1.10.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.10/log_output)
+- [1.11.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/volumes) (also [log_output](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/log_output) and [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/ping_pong))
 
 ## Running
 
@@ -100,4 +101,14 @@ in the same pod sharing an `emptyDir` volume.
 kubectl apply -f log_output/manifests
 kubectl logs deployment/log-output-dep -c log-writer
 # open http://localhost:8081/status
+```
+
+### 1.11
+
+The PersistentVolume and its claim live in `volumes/` since they are not application specific.
+
+```
+docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube
+kubectl apply -f volumes -f ping_pong/manifests -f log_output/manifests
+# open http://localhost:8081/pingpong a few times, then http://localhost:8081/status
 ```
