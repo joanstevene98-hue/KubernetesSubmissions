@@ -16,6 +16,12 @@ spec:
       volumes:
         - name: shared-log
           emptyDir: {}
+        - name: config
+          configMap:
+            name: log-output-config
+            items:
+              - key: information.txt
+                path: information.txt
       containers:
         - name: log-writer
           image: ghcr.io/joanstevene98-hue/log-output-writer:2.1
@@ -26,7 +32,7 @@ spec:
             - name: shared-log
               mountPath: /usr/src/app/files
         - name: log-reader
-          image: ghcr.io/joanstevene98-hue/log-output-reader:2.1
+          image: ghcr.io/joanstevene98-hue/log-output-reader:2.5
           env:
             - name: PORT
               value: "3000"
@@ -34,6 +40,16 @@ spec:
               value: /usr/src/app/files/log.txt
             - name: PINGPONG_URL
               value: http://ping-pong-svc:2345/pings
+            - name: INFO_FILE
+              value: /usr/src/app/config/information.txt
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-config
+                  key: MESSAGE
           volumeMounts:
             - name: shared-log
               mountPath: /usr/src/app/files
+            - name: config
+              mountPath: /usr/src/app/config
+              readOnly: true

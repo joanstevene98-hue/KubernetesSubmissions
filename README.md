@@ -27,6 +27,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_backend) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_app))
 - [2.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/namespaces) (also [log_output](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/log_output) and [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/ping_pong))
 - [2.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/namespaces) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_app) and [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_backend))
+- [2.5.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.5/log_output)
 
 ## Running
 
@@ -177,4 +178,14 @@ Everything of the project lives in the `project` namespace.
 kubectl apply -f namespaces/project.yaml
 kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
 kubectl get all -n project
+```
+
+### 2.5
+
+The ConfigMap `log_output/manifests/configmap.yaml` provides `information.txt` (mounted
+as a file) and `MESSAGE` (env variable).
+
+```
+kubectl apply -f log_output/manifests
+# open http://localhost:8081/status
 ```

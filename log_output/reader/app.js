@@ -5,6 +5,8 @@ const path = require('path')
 const PORT = process.env.PORT || 3000
 const FILE_PATH = process.env.LOG_FILE || path.join(__dirname, 'files', 'log.txt')
 const PINGPONG_URL = process.env.PINGPONG_URL || 'http://ping-pong-svc:2345/pings'
+const INFO_FILE = process.env.INFO_FILE || path.join(__dirname, 'config', 'information.txt')
+const MESSAGE = process.env.MESSAGE
 
 const readFile = (file, fallback) => {
   try {
@@ -29,7 +31,13 @@ const status = async () => {
   const lines = readFile(FILE_PATH, '').trim().split('\n')
   const lastLine = lines[lines.length - 1] || 'No log yet'
   const pongs = await fetchPongs()
-  return `${lastLine}.\nPing / Pongs: ${pongs}`
+  const info = readFile(INFO_FILE, '').trim()
+  return [
+    `file content: ${info}`,
+    `env variable: MESSAGE=${MESSAGE}`,
+    `${lastLine}.`,
+    `Ping / Pongs: ${pongs}`,
+  ].join('\n')
 }
 
 const server = http.createServer(async (req, res) => {
