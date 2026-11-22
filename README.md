@@ -9,6 +9,7 @@ Images are built by GitHub Actions on every tag and pushed to
 
 - [1.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.1/log_output)
 - [1.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.2/todo_app)
+- [1.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.3/log_output)
 
 ## Running
 
@@ -28,4 +29,11 @@ kubectl logs -f deployment/log-output
 ```
 kubectl create deployment todo-app --image=ghcr.io/joanstevene98-hue/todo-app:1.2
 kubectl logs deployment/todo-app
+```
+
+### 1.3
+
+```
+kubectl apply -f log_output/manifests/deployment.yaml
+kubectl logs -f deployment/log-output-dep
 ```
