@@ -14,6 +14,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.5.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.5/todo_app)
 - [1.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.6/todo_app)
 - [1.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.7/log_output)
+- [1.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.8/todo_app)
 
 ## Running
 
@@ -69,4 +70,12 @@ kubectl apply -f todo_app/manifests
 ```
 kubectl apply -f log_output/manifests
 # open http://localhost:8081/status
+```
+
+### 1.8
+
+```
+kubectl delete ingress log-output-ingress
+kubectl apply -f todo_app/manifests
+# open http://localhost:8081
 ```
