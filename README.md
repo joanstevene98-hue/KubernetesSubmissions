@@ -26,6 +26,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/log_output) (also [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.1/ping_pong))
 - [2.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_backend) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.2/todo_app))
 - [2.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/namespaces) (also [log_output](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/log_output) and [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/ping_pong))
+- [2.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/namespaces) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_app) and [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_backend))
 
 ## Running
 
@@ -166,4 +167,14 @@ Log output and ping-pong live in the `exercises` namespace.
 kubectl apply -f namespaces/exercises.yaml
 kubectl apply -f ping_pong/manifests -f log_output/manifests
 kubectl get all -n exercises
+```
+
+### 2.4
+
+Everything of the project lives in the `project` namespace.
+
+```
+kubectl apply -f namespaces/project.yaml
+kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
+kubectl get all -n project
 ```
