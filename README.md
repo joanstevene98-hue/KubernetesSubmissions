@@ -19,6 +19,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.10.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.10/log_output)
 - [1.11.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/volumes) (also [log_output](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/log_output) and [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.11/ping_pong))
 - [1.12.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.12/todo_app)
+- [1.13.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.13/todo_app)
 
 ## Running
 
@@ -122,5 +123,12 @@ The todo app caches an image from Lorem Picsum into a persistent volume for 10 m
 ```
 docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube-todo
 kubectl apply -f volumes -f todo_app/manifests
+# open http://localhost:8081
+```
+
+### 1.13
+
+```
+kubectl apply -f todo_app/manifests
 # open http://localhost:8081
 ```
