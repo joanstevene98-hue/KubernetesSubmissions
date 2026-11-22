@@ -30,6 +30,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.5.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.5/log_output)
 - [2.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_app) (also [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_backend))
 - [2.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.7/ping_pong)
+- [2.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.8/todo_backend)
 
 ## Running
 
@@ -212,4 +213,14 @@ export SOPS_AGE_KEY_FILE=<path to key.txt>
 sops --decrypt ping_pong/secrets/secret.enc.yaml | kubectl apply -f -
 kubectl apply -f ping_pong/manifests
 # open http://localhost:8081/pingpong
+```
+
+### 2.8
+
+The todo backend stores the todos in Postgres (StatefulSet). Connection settings come from
+the ConfigMap and the credentials from a SOPS encrypted Secret.
+
+```
+sops --decrypt todo_backend/secrets/secret.enc.yaml | kubectl apply -f -
+kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
 ```

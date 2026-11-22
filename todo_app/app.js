@@ -90,7 +90,7 @@ const page = (todos) => `<!DOCTYPE html>
       <button type="submit">Create todo</button>
     </form>
     <ul>
-      ${todos.map((todo) => `<li>${escapeHtml(todo)}</li>`).join('\n      ')}
+      ${todos.map((todo) => `<li>${escapeHtml(todo.text)}</li>`).join('\n      ')}
     </ul>
     <p>DevOps with Kubernetes 2026</p>
   </body>

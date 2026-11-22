@@ -1,9 +1,20 @@
 const http = require('http')
+const { Pool } = require('pg')
 
 const PORT = process.env.PORT
 if (!PORT) throw new Error('Missing environment variable PORT')
 
-const todos = ['Learn JavaScript', 'Learn React', 'Build a project']
+// Connection settings come from PGHOST, PGUSER, PGPASSWORD, PGDATABASE env variables
+const pool = new Pool()
+
+const initDb = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id SERIAL PRIMARY KEY,
+      text VARCHAR(140) NOT NULL,
+      done BOOLEAN NOT NULL DEFAULT false
+    )`)
+}
 
 const readBody = (req) => new Promise((resolve, reject) => {
   let data = ''
@@ -18,24 +29,49 @@ const sendJson = (res, status, body) => {
 }
 
 const server = http.createServer(async (req, res) => {
-  if (req.method === 'GET' && req.url === '/todos') {
-    return sendJson(res, 200, todos)
-  }
-  if (req.method === 'POST' && req.url === '/todos') {
-    try {
-      const { text } = JSON.parse(await readBody(req))
+  try {
+    if (req.method === 'GET' && req.url === '/todos') {
+      const { rows } = await pool.query('SELECT id, text, done FROM todos ORDER BY id')
+      return sendJson(res, 200, rows)
+    }
+    if (req.method === 'POST' && req.url === '/todos') {
+      let text
+      try {
+        text = JSON.parse(await readBody(req)).text
+      } catch {
+        return sendJson(res, 400, { error: 'invalid JSON' })
+      }
       if (typeof text !== 'string' || !text.trim()) {
         return sendJson(res, 400, { error: 'text is required' })
       }
-      todos.push(text.trim())
-      return sendJson(res, 201, text.trim())
-    } catch {
-      return sendJson(res, 400, { error: 'invalid JSON' })
+      const { rows } = await pool.query(
+        'INSERT INTO todos (text) VALUES ($1) RETURNING id, text, done',
+        [text.trim()],
+      )
+      return sendJson(res, 201, rows[0])
     }
+    sendJson(res, 404, { error: 'not found' })
+  } catch (error) {
+    console.error(error)
+    sendJson(res, 500, { error: 'internal server error' })
   }
-  sendJson(res, 404, { error: 'not found' })
 })
 
-server.listen(PORT, () => {
-  console.log(`Server started in port ${PORT}`)
-})
+const start = async () => {
+  // The database may still be starting, so retry for a while
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await initDb()
+      break
+    } catch (error) {
+      if (attempt >= 30) throw error
+      console.log(`Database not ready (${error.message}), retrying...`)
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+  }
+  server.listen(PORT, () => {
+    console.log(`Server started in port ${PORT}`)
+  })
+}
+
+start()
