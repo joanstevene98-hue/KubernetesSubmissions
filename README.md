@@ -28,6 +28,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [2.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/namespaces) (also [log_output](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/log_output) and [ping_pong](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.3/ping_pong))
 - [2.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/namespaces) (also [todo_app](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_app) and [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.4/todo_backend))
 - [2.5.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.5/log_output)
+- [2.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_app) (also [todo_backend](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/2.6/todo_backend))
 
 ## Running
 
@@ -188,4 +189,13 @@ as a file) and `MESSAGE` (env variable).
 ```
 kubectl apply -f log_output/manifests
 # open http://localhost:8081/status
+```
+
+### 2.6
+
+The project apps have no hard coded configuration, everything comes from the ConfigMaps
+`todo_app/manifests/configmap.yaml` and `todo_backend/manifests/configmap.yaml`.
+
+```
+kubectl apply -f volumes -f todo_backend/manifests -f todo_app/manifests
 ```

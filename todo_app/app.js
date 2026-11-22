@@ -2,11 +2,17 @@ const fs = require('fs')
 const http = require('http')
 const path = require('path')
 
-const PORT = process.env.PORT || 3000
-const IMAGE_DIR = process.env.IMAGE_DIR || path.join(__dirname, 'files')
-const IMAGE_URL = process.env.IMAGE_URL || 'https://picsum.photos/1200'
-const TODO_BACKEND_URL = process.env.TODO_BACKEND_URL || 'http://todo-backend-svc:2345'
-const IMAGE_TTL_MS = 10 * 60 * 1000
+const requireEnv = (name) => {
+  const value = process.env[name]
+  if (!value) throw new Error(`Missing environment variable ${name}`)
+  return value
+}
+
+const PORT = requireEnv('PORT')
+const IMAGE_DIR = requireEnv('IMAGE_DIR')
+const IMAGE_URL = requireEnv('IMAGE_URL')
+const TODO_BACKEND_URL = requireEnv('TODO_BACKEND_URL')
+const IMAGE_TTL_MS = Number(requireEnv('IMAGE_TTL_MINUTES')) * 60 * 1000
 
 const imagePath = path.join(IMAGE_DIR, 'image.jpg')
 const metaPath = path.join(IMAGE_DIR, 'image.json')

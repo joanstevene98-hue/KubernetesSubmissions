@@ -1,6 +1,7 @@
 const http = require('http')
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
+if (!PORT) throw new Error('Missing environment variable PORT')
 
 const todos = ['Learn JavaScript', 'Learn React', 'Build a project']
 
