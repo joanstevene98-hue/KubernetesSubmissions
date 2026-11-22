@@ -10,6 +10,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.1.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.1/log_output)
 - [1.2.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.2/todo_app)
 - [1.3.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.3/log_output)
+- [1.4.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.4/todo_app)
 
 ## Running
 
@@ -36,4 +37,11 @@ kubectl logs deployment/todo-app
 ```
 kubectl apply -f log_output/manifests/deployment.yaml
 kubectl logs -f deployment/log-output-dep
+```
+
+### 1.4
+
+```
+kubectl apply -f todo_app/manifests/deployment.yaml
+kubectl logs deployment/todo-app-dep
 ```
