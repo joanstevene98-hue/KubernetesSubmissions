@@ -15,6 +15,7 @@ Images are built by GitHub Actions on every tag and pushed to
 - [1.6.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.6/todo_app)
 - [1.7.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.7/log_output)
 - [1.8.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.8/todo_app)
+- [1.9.](https://github.com/joanstevene98-hue/KubernetesSubmissions/tree/1.9/ping_pong)
 
 ## Running
 
@@ -78,4 +79,13 @@ kubectl apply -f log_output/manifests
 kubectl delete ingress log-output-ingress
 kubectl apply -f todo_app/manifests
 # open http://localhost:8081
+```
+
+### 1.9
+
+The ping-pong app shares the ingress of log output (`log_output/manifests/ingress.yaml`).
+
+```
+kubectl apply -f ping_pong/manifests -f log_output/manifests
+# open http://localhost:8081/pingpong
 ```
